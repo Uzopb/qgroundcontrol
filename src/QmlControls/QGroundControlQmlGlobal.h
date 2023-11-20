@@ -31,6 +31,11 @@ class TaisyncManager;
 #else
 class MicrohardManager;
 #endif
+#if defined(QGC_GST_AIRLINK_ENABLED)
+#include "AirLinkManager.h"
+#else
+class AirLinkManager;
+#endif
 
 #ifdef QT_DEBUG
 #include "MockLink.h"
@@ -70,6 +75,7 @@ public:
     Q_PROPERTY(MissionCommandTree*  missionCommandTree      READ    missionCommandTree      CONSTANT)
     Q_PROPERTY(FactGroup*           gpsRtk                  READ    gpsRtkFactGroup         CONSTANT)
     Q_PROPERTY(TaisyncManager*      taisyncManager          READ    taisyncManager          CONSTANT)
+    Q_PROPERTY(AirLinkManager*      airlinkManager          READ    airlinkManager          CONSTANT)
     Q_PROPERTY(bool                 taisyncSupported        READ    taisyncSupported        CONSTANT)
     Q_PROPERTY(MicrohardManager*    microhardManager        READ    microhardManager        CONSTANT)
     Q_PROPERTY(bool                 microhardSupported      READ    microhardSupported      CONSTANT)
@@ -181,6 +187,13 @@ public:
     bool                    microhardSupported  () { return false; }
 #endif
 
+    AirLinkManager*         airlinkManager      ()  { return _airlinkManager; }
+#if defined(QGC_GST_AIRLINK_ENABLED)
+    bool                    airlinkSupported    ()  { return true; }
+#else
+    bool                    airlinkSupported    () { return false; }
+#endif
+
     qreal zOrderTopMost             () { return 1000; }
     qreal zOrderWidgets             () { return 100; }
     qreal zOrderMapItems            () { return 50; }
@@ -247,6 +260,7 @@ private:
     FactGroup*              _gpsRtkFactGroup        = nullptr;
     TaisyncManager*         _taisyncManager         = nullptr;
     MicrohardManager*       _microhardManager       = nullptr;
+    AirLinkManager*         _airlinkManager         = nullptr;
     ADSBVehicleManager*     _adsbVehicleManager     = nullptr;
     QGCPalette*             _globalPalette          = nullptr;
     QmlUnitsConversion      _unitsConversion;

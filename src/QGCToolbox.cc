@@ -40,6 +40,9 @@
 #if defined(QGC_GST_MICROHARD_ENABLED)
 #include "MicrohardManager.h"
 #endif
+#if defined(QGC_GST_AIRLINK_ENABLED)
+#include "AirlinkManager.h"
+#endif
 
 #if defined(QGC_CUSTOM_BUILD)
 #include CUSTOMHEADER
@@ -79,6 +82,9 @@ QGCToolbox::QGCToolbox(QGCApplication* app)
 #if defined(QGC_GST_MICROHARD_ENABLED)
     _microhardManager       = new MicrohardManager          (app, this);
 #endif
+#if defined(QGC_GST_AIRLINK_ENABLED)
+    _airlinkManager         = new AirLinkManager            (app, this);
+#endif
 }
 
 void QGCToolbox::setChildToolboxes(void)
@@ -108,6 +114,9 @@ void QGCToolbox::setChildToolboxes(void)
     _adsbVehicleManager->setToolbox(this);
 #if defined(QGC_GST_TAISYNC_ENABLED)
     _taisyncManager->setToolbox(this);
+#endif
+#if defined(QGC_GST_AIRLINK_ENABLED)
+    _airlinkManager->setToolbox(this);
 #endif
 #if defined(QGC_GST_MICROHARD_ENABLED)
     _microhardManager->setToolbox(this);

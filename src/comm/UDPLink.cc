@@ -137,7 +137,7 @@ bool UDPLink::_isIpLocal(const QHostAddress& add)
     return false;
 }
 
-void UDPLink::_writeBytes(const QByteArray data)
+void UDPLink::  _writeBytes(const QByteArray data)
 {
     if (!_socket) {
         return;
@@ -415,6 +415,11 @@ void UDPConfiguration::removeHost(const QString host)
 void UDPConfiguration::setLocalPort(quint16 port)
 {
     _localPort = port;
+}
+
+void UDPConfiguration::setPassword(const QString &pass)
+{
+    _password = pass;
 }
 
 void UDPConfiguration::saveSettings(QSettings& settings, const QString& root)

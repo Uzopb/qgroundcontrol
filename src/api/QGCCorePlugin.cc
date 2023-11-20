@@ -55,6 +55,10 @@ public:
         if(pMicrohard)
             delete pMicrohard;
 #endif
+#if defined(QGC_GST_AIRLINK_ENABLED)
+        if(pAirLink)
+            delete pAirLink;
+#endif
         if(pMAVLink)
             delete pMAVLink;
         if(pConsole)
@@ -81,6 +85,9 @@ public:
 #endif
 #if defined(QGC_GST_MICROHARD_ENABLED)
     QmlComponentInfo* pMicrohard                = nullptr;
+#endif
+#if defined(QGC_GST_AIRLINK_ENABLED)
+    QmlComponentInfo* pAirLink                  = nullptr;
 #endif
     QmlComponentInfo* pMAVLink                  = nullptr;
     QmlComponentInfo* pConsole                  = nullptr;
@@ -150,6 +157,12 @@ QVariantList &QGCCorePlugin::settingsPages()
                                               QUrl::fromUserInput("qrc:/qml/MicrohardSettings.qml"),
                                               QUrl::fromUserInput(""));
         _p->settingsList.append(QVariant::fromValue(reinterpret_cast<QmlComponentInfo*>(_p->pMicrohard)));
+#endif
+#if defined(QGC_GST_AIRLINK_ENABLED)
+        _p->pAirLink = new QmlComponentInfo(tr("AirLink"),
+                                            QUrl::fromUserInput("qrc:/qml/AirLinkSettings.qml"),
+                                            QUrl::fromUserInput(""));
+        _p->settingsList.append(QVariant::fromValue(reinterpret_cast<QmlComponentInfo*>(_p->pAirLink)));
 #endif
         _p->pMAVLink = new QmlComponentInfo(tr("MAVLink"),
                                             QUrl::fromUserInput("qrc:/qml/MavlinkSettings.qml"),

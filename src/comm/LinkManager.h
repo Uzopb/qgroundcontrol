@@ -12,7 +12,6 @@
 #include <QList>
 #include <QMultiMap>
 #include <QMutex>
-#include <QNetworkReply>
 
 #include <limits>
 
@@ -60,8 +59,6 @@ public:
     Q_PROPERTY(QStringList          serialPortStrings               READ serialPortStrings               NOTIFY commPortStringsChanged)
     Q_PROPERTY(QStringList          serialPorts                     READ serialPorts                     NOTIFY commPortsChanged)
     Q_PROPERTY(bool                 mavlinkSupportForwardingEnabled READ mavlinkSupportForwardingEnabled NOTIFY mavlinkSupportForwardingEnabledChanged)
-    Q_PROPERTY(bool                 isConnectServer                 READ isConnectServer                 NOTIFY connectStatusChanged)
-    Q_PROPERTY(bool                 isAuthServer                    READ isAuthServer                    NOTIFY authStatusChanged)
 
     /// Create/Edit Link Configuration
     Q_INVOKABLE LinkConfiguration*  createConfiguration                (int type, const QString& name);
@@ -71,9 +68,6 @@ public:
     Q_INVOKABLE bool                endCreateConfiguration             (LinkConfiguration* config);
     Q_INVOKABLE void                removeConfiguration                (LinkConfiguration* config);
     Q_INVOKABLE void                createMavlinkForwardingSupportLink (void);
-    Q_INVOKABLE void                connectToAirLinkServer             (const QString &login, const QString &pass);
-    Q_INVOKABLE void                createConfigurationAirLink         (void);
-    Q_INVOKABLE void                sendLoginMsgToAirLink              (LinkInterface* link, const QString &login);
 
     // Called to signal app shutdown. Disconnects all links while turning off auto-connect.
     Q_INVOKABLE void shutdown(void);
@@ -90,8 +84,6 @@ public:
     QStringList                     serialPortStrings               (void);
     QStringList                     serialPorts                     (void);
     bool                            mavlinkSupportForwardingEnabled (void) { return _mavlinkSupportForwardingEnabled; }
-    bool                            isConnectServer                 (void) { return _isConnectServer; }
-    bool                            isAuthServer                    (void) { return _isAuthServer; }
 
     void loadLinkConfigurationList();
     void saveLinkConfigurationList();
@@ -151,12 +143,9 @@ signals:
     void commPortStringsChanged();
     void commPortsChanged();
     void mavlinkSupportForwardingEnabledChanged();
-    void connectStatusChanged();
-    void authStatusChanged();
 
 private slots:
     void _linkDisconnected  (void);
-    void _onlineStatusUpdate  (void);
 
 private:
     QmlObjectListModel* _qmlLinkConfigurations      (void) { return &_qmlConfigurations; }
@@ -169,9 +158,6 @@ private:
     void                _addMAVLinkForwardingLink   (void);
     bool                _isSerialPortConnected      (void);
     void                _createDynamicForwardLink   (const char* linkName, QString hostName);
-    void                _parseAnswer                (const QByteArray &ba);
-    void                _processReplyAirlinkServer  (QNetworkReply &reply);
-    void                _updateAirLinkState         (const QString &login, const QString &pass);
 
 #ifndef NO_SERIAL_LINK
     bool                _portAlreadyConnected       (const QString& portName);
@@ -184,14 +170,6 @@ private:
     QTimer                              _portListTimer;
     uint32_t                            _mavlinkChannelsUsedBitMask;
 
-    QTimer                              _onlineStatusTimer;
-    uint32_t                            _onlineTimeout {10000};
-
-    QMutex                              _mutex;
-
-    QNetworkReply*                      _reply;
-    QNetworkReply*                      _replyOnline;
-
     AutoConnectSettings*                _autoConnectSettings;
     MAVLinkProtocol*                    _mavlinkProtocol;
 
@@ -203,13 +181,6 @@ private:
     QMap<QString, int>                  _autoconnectPortWaitList;               ///< key: QGCSerialPortInfo::systemLocation, value: wait count
     QStringList                         _commPortList;
     QStringList                         _commPortDisplayList;
-
-    bool                                _isConnectServer {true};
-    bool                                _isAuthServer {true};
-    bool                                _isAuth;
-    bool                                _isOnlineStatusRequest;
-    bool                                _isCreatedConfig {false};
-    QMap<QString, bool>                 _vehiclesFromServer;
 
 #ifndef NO_SERIAL_LINK
     QList<SerialLink*>                  _activeLinkCheckList;                   ///< List of links we are waiting for a vehicle to show up on

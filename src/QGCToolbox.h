@@ -42,6 +42,9 @@ class TaisyncManager;
 #if defined(QGC_GST_MICROHARD_ENABLED)
 class MicrohardManager;
 #endif
+#if defined(QGC_GST_AIRLINK_ENABLED)
+class AirLinkManager;
+#endif
 
 /// This is used to manage all of our top level services/tools
 class QGCToolbox : public QObject {
@@ -75,6 +78,9 @@ public:
 #endif
 #if defined(QGC_GST_TAISYNC_ENABLED)
     TaisyncManager*             taisyncManager          () { return _taisyncManager; }
+#endif
+#if defined(QGC_GST_AIRLINK_ENABLED)
+    AirLinkManager*              airlinkManager          () { return _airlinkManager; }
 #endif
 #if defined(QGC_GST_MICROHARD_ENABLED)
     MicrohardManager*           microhardManager        () { return _microhardManager; }
@@ -114,6 +120,9 @@ private:
 #endif
 #if defined(QGC_GST_MICROHARD_ENABLED)
     MicrohardManager*           _microhardManager       = nullptr;
+#endif
+#if defined(QGC_GST_AIRLINK_ENABLED)
+    AirLinkManager*             _airlinkManager         = nullptr;
 #endif
     friend class QGCApplication;
 };

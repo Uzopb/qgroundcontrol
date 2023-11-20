@@ -28,6 +28,7 @@ linux {
         DEFINES += __STDC_LIMIT_MACROS
         DEFINES += QGC_GST_TAISYNC_ENABLED
         DEFINES += QGC_GST_MICROHARD_ENABLED 
+        DEFINES += QGC_GST_AIRLINK_ENABLED
         linux-clang {
             message("Linux clang")
             QMAKE_CXXFLAGS += -Qunused-arguments -fcolor-diagnostics
@@ -44,6 +45,7 @@ linux {
         DEFINES += __STDC_LIMIT_MACROS __rasp_pi2__
         DEFINES += QGC_GST_TAISYNC_ENABLED
         DEFINES += QGC_GST_MICROHARD_ENABLED 
+        DEFINES += QGC_GST_AIRLINK_ENABLED
     } else : android-clang {
         CONFIG += AndroidBuild MobileBuild
         DEFINES += __android__
@@ -51,6 +53,7 @@ linux {
         DEFINES += QGC_ENABLE_BLUETOOTH
         DEFINES += QGC_GST_TAISYNC_ENABLED
         DEFINES += QGC_GST_MICROHARD_ENABLED 
+        DEFINES += QGC_GST_AIRLINK_ENABLED
         QMAKE_CXXFLAGS_WARN_ON += -Werror \
             -Wno-unused-parameter \             # gst_plugins-good has these errors
             -Wno-implicit-fallthrough \         # gst_plugins-good has these errors
@@ -81,7 +84,8 @@ linux {
         CONFIG += WindowsBuild
         DEFINES += __STDC_LIMIT_MACROS
         DEFINES += QGC_GST_TAISYNC_ENABLED
-        DEFINES += QGC_GST_MICROHARD_ENABLED 
+        DEFINES += QGC_GST_MICROHARD_ENABLED
+        DEFINES += QGC_GST_AIRLINK_ENABLED
         QMAKE_CFLAGS -= -Zc:strictStrings
         QMAKE_CFLAGS_RELEASE -= -Zc:strictStrings
         QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO -= -Zc:strictStrings
@@ -103,7 +107,8 @@ linux {
         CONFIG  += x86_64
         CONFIG  -= x86
         DEFINES += QGC_GST_TAISYNC_ENABLED
-        DEFINES += QGC_GST_MICROHARD_ENABLED 
+        DEFINES += QGC_GST_MICROHARD_ENABLED
+        DEFINES += QGC_GST_AIRLINK_ENABLED
         QMAKE_CXXFLAGS += -fvisibility=hidden
         QMAKE_CXXFLAGS_WARN_ON += -Werror \
             -Wno-unused-parameter \         # gst-plugins-good
@@ -120,6 +125,7 @@ linux {
     DEFINES += NO_SERIAL_LINK
     DEFINES += QGC_DISABLE_UVC
     DEFINES += QGC_GST_TAISYNC_ENABLED
+    DEFINES += QGC_GST_AIRLINK_ENABLED
     QMAKE_IOS_DEPLOYMENT_TARGET = 11.0
     QMAKE_APPLE_TARGETED_DEVICE_FAMILY = 1,2 # Universal
     QMAKE_LFLAGS += -Wl,-no_pie

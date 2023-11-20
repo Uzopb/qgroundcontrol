@@ -10,8 +10,9 @@
 QMAKE_PROJECT_DEPTH = 0 # undocumented qmake flag to force absolute paths in makefiles
 
 # These are disabled until proven correct
-DEFINES += QGC_GST_TAISYNC_DISABLED
+DEFINES += QGC_GST_TAISYNC_ENABLED
 DEFINES += QGC_GST_MICROHARD_DISABLED
+DEFINES += QGC_GST_AIRLINK_ENABLED
 
 exists($${OUT_PWD}/qgroundcontrol.pro) {
     error("You must use shadow build (e.g. mkdir build; cd build; qmake ../qgroundcontrol.pro).")
@@ -1295,6 +1296,24 @@ contains (DEFINES, QGC_DISABLE_MAVLINK_INSPECTOR) {
         src/AnalyzeView/MAVLinkInspectorController.cc
     QT += \
         charts
+}
+
+#-------------------------------------------------------------------------------------
+# Airlink
+contains (DEFINES, QGC_GST_AIRLINK_DISABLED) {
+    DEFINES -= QGC_GST_AIRLINK_ENABLED
+    message("AirLink disabled")
+} else {
+    contains (DEFINES, QGC_GST_AIRLINK_ENABLED) {
+        INCLUDEPATH += \
+            src/AirLink
+
+        HEADERS += \
+            src/AirLink/AirLinkManager.h
+
+        SOURCES += \
+            src/AirLink/AirLinkManager.cc
+    }
 }
 
 #-------------------------------------------------------------------------------------

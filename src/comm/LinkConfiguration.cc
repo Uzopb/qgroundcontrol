@@ -25,7 +25,6 @@
 
 LinkConfiguration::LinkConfiguration(const QString& name)
     : _name         (name)
-    , _password     ("")
     , _dynamic      (false)
     , _autoConnect  (false)
     , _highLatency  (false)
@@ -37,7 +36,6 @@ LinkConfiguration::LinkConfiguration(LinkConfiguration* copy)
 {
     _link       = copy->_link;
     _name       = copy->name();
-    _password   = copy->password();
     _dynamic    = copy->isDynamic();
     _autoConnect= copy->isAutoConnect();
     _highLatency= copy->isHighLatency();
@@ -49,7 +47,6 @@ void LinkConfiguration::copyFrom(LinkConfiguration* source)
     Q_ASSERT(source != nullptr);
     _link       = source->_link;
     _name       = source->name();
-    _password   = source->password();
     _dynamic    = source->isDynamic();
     _autoConnect= source->isAutoConnect();
     _highLatency= source->isHighLatency();

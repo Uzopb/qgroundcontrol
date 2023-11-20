@@ -67,8 +67,8 @@ public:
     Q_INVOKABLE void removeHost  (const QString host);
 
     void                    setLocalPort(quint16 port);
-    QStringList             hostList    (void)          { return _hostList; }
-    const QList<UDPCLient*> targetHosts (void)          { return _targetHosts; }
+    QStringList             hostList    (void)                  { return _hostList; }
+    const QList<UDPCLient*> targetHosts (void)                  { return _targetHosts; }
 
     /// LinkConfiguration overrides
     LinkType    type                 (void) override                                        { return LinkConfiguration::TypeUdp; }
