@@ -1086,9 +1086,19 @@ void LinkManager::sendLoginMsgToAirLink(LinkInterface* link, const QString &logi
 
     mavlink_msg_airlink_auth_pack(0, 0, &mavmsg, auth.login, auth.password);
     uint16_t len = mavlink_msg_to_send_buffer(buffer, &mavmsg);
-    link->writeBytesThreadSafe((const char *)buffer, len);
 
-    qDebug() << (link->isConnected() ? "Connected" : "Not connected");
-    qDebug() << login.toUtf8().constData();
-    qDebug() << pass.toUtf8().constData();
+    QTimer *repeatingConnection = new QTimer;
+    repeatingConnection->setInterval(1000);
+    connect(repeatingConnection, &QTimer::timeout, [link, login, pass, buffer, len, repeatingConnection]() {
+        link->writeBytesThreadSafe((const char *)buffer, len);
+
+        qDebug() << (link->isConnected() ? "Connected" : "Not connected");
+        qDebug() << login.toUtf8().constData();
+        qDebug() << pass.toUtf8().constData();
+        if (link->isConnected()) {
+            repeatingConnection->stop();
+            repeatingConnection->deleteLater();
+        }
+    });
+    repeatingConnection->start();
 }
