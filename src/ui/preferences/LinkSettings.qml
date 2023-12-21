@@ -7,18 +7,17 @@
  *
  ****************************************************************************/
 
-import QtQuick                  2.3
-import QtQuick.Controls         2.12
-import QtQuick.Controls.Styles  1.4
-import QtQuick.Dialogs          1.2
-import QtQuick.Layouts          1.2
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Dialogs
+import QtQuick.Layouts
 
-import QGroundControl               1.0
-import QGroundControl.Controls      1.0
-import QGroundControl.ScreenTools   1.0
-import QGroundControl.Palette       1.0
-import QGroundControl.FactControls  1.0
-import QGroundControl.FactSystem    1.0
+import QGroundControl
+import QGroundControl.Controls
+import QGroundControl.ScreenTools
+import QGroundControl.Palette
+import QGroundControl.FactControls
+import QGroundControl.FactSystem
 
 
 Rectangle {
@@ -52,23 +51,39 @@ Rectangle {
     MessageDialog {
         id:         loginDialog
         visible:    false
-        icon:       StandardIcon.Warning
-        standardButtons: StandardButton.Yes
+        //icon:       Standard//icon.Warning
+        buttons: MessageDialog.Yes
         title:      qsTr("AirLink Authentification")
         text:       qsTr("Wrong login or password. Please check it and try again!")
 
-        onYes: loginDialog.visible = false
+        onButtonClicked: function (button, role) {
+                            switch (button) {
+                            case MessageDialog.Yes:
+                                loginDialog.visible = false
+                                break;
+                        }
+        }
+
+        //onYes: loginDialog.visible = false
     }
 
     MessageDialog {
         id:         connectingDialog
         visible:    false
-        icon:       StandardIcon.Warning
-        standardButtons: StandardButton.Yes
+        //icon:       Standard//icon.Warning
+        buttons: MessageDialog.Yes
         title:      qsTr("AirLink Authentification")
         text:       qsTr("No network connection. Please check it and try again!")
 
-        onYes: loginDialog.visible = false
+        onButtonClicked: function (button, role) {
+                            switch (button) {
+                            case MessageDialog.Yes:
+                                loginDialog.visible = false
+                                break;
+                        }
+        }
+
+        //onYes: loginDialog.visible = false
     }
 
     QGCPalette {
@@ -76,7 +91,7 @@ Rectangle {
         colorGroupEnabled:  enabled
     }
 
-    property bool highlight: pressed | checked | hovered
+    property bool highlight: connectingDialog.pressed | connectingDialog.checked | connectingDialog.hovered
 
     function openCommSettings(originalLinkConfig) {
         settingsLoader.originalLinkConfig = originalLinkConfig
@@ -163,7 +178,7 @@ Rectangle {
             MessageDialog {
                 id:         deleteDialog
                 visible:    false
-                //icon:       StandardIcon.Warning
+                ////icon:       Standard//icon.Warning
                 buttons:    MessageDialog.Yes | MessageDialog.No
                 title:      qsTr("Remove Link Configuration")
                 text:       _currentSelection ? qsTr("Remove %1. Is this really what you want?").arg(_currentSelection.name) : ""
