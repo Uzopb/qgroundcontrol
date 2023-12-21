@@ -163,17 +163,23 @@ Rectangle {
             MessageDialog {
                 id:         deleteDialog
                 visible:    false
-                icon:       StandardIcon.Warning
-                standardButtons: StandardButton.Yes | StandardButton.No
+                //icon:       StandardIcon.Warning
+                buttons:    MessageDialog.Yes | MessageDialog.No
                 title:      qsTr("Remove Link Configuration")
                 text:       _currentSelection ? qsTr("Remove %1. Is this really what you want?").arg(_currentSelection.name) : ""
 
-                onYes: {
-                    QGroundControl.linkManager.removeConfiguration(_currentSelection)
-                    _currentSelection = null
-                    deleteDialog.visible = false
+                onButtonClicked: function (button, role) {
+                    switch (button) {
+                    case MessageDialog.Yes:
+                        QGroundControl.linkManager.removeConfiguration(_currentSelection)
+                        _currentSelection = null
+                        deleteDialog.visible = false
+                        break;
+                    case MessageDialog.No:
+                        deleteDialog.visible = false
+                        break;
+                    }
                 }
-                onNo: deleteDialog.visible = false
             }
         }
         QGCButton {

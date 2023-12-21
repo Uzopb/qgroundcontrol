@@ -1,11 +1,11 @@
 pragma Singleton
 
-import QtQuick          2.12
-import QtQuick.Controls 1.2
-import QtQuick.Window   2.2
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Window
 
-import QGroundControl                       1.0
-import QGroundControl.ScreenToolsController 1.0
+import QGroundControl
+import QGroundControl.ScreenToolsController
 
 /*!
  The ScreenTools Singleton provides information on QGC's standard font metrics. It also provides information on screen
@@ -17,7 +17,7 @@ import QGroundControl.ScreenToolsController 1.0
 
  Usage:
 
-        import QGroundControl.ScreenTools 1.0
+        import QGroundControl.ScreenTools
 
         Rectangle {
             anchors.fill:       parent
@@ -95,6 +95,7 @@ Item {
     property real implicitButtonHeight:             Math.round(defaultFontPixelHeight * (isMobile ? 2.0 : 1.6))
     property real implicitCheckBoxHeight:           Math.round(defaultFontPixelHeight * (isMobile ? 2.0 : 1.0))
     property real implicitRadioButtonHeight:        implicitCheckBoxHeight
+    property real implicitTextFieldWidth:           defaultFontPixelWidth * 13
     property real implicitTextFieldHeight:          Math.round(defaultFontPixelHeight * (isMobile ? 2.0 : 1.6))
     property real implicitComboBoxHeight:           Math.round(defaultFontPixelHeight * (isMobile ? 2.0 : 1.6))
     property real implicitComboBoxWidth:            Math.round(defaultFontPixelWidth *  (isMobile ? 7.0 : 5.0))

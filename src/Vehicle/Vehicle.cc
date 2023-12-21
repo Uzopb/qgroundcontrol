@@ -1726,7 +1726,8 @@ void Vehicle::setEventsMetadata(uint8_t compid, const QString& metadataJsonFileN
                    false);
 }
 
-void Vehicle::setActuatorsMetadata(uint8_t compid, const QString& metadataJsonFileName)
+void Vehicle::setActuatorsMetadata([[maybe_unused]] uint8_t compid,
+                                   const QString &metadataJsonFileName)
 {
     if (!_actuators) {
         _actuators = new Actuators(this, this);
@@ -1998,7 +1999,7 @@ QString Vehicle::formattedMessages()
 {
     QString messages;
     for(UASMessage* message: _toolbox->uasMessageHandler()->messages()) {
-        messages += message->getFormatedText();
+        messages.prepend(message->getFormatedText());
     }
     return messages;
 }
@@ -3597,6 +3598,7 @@ void Vehicle::startCalibration(Vehicle::CalibrationType calType)
             // Gyro cal for ArduCopter only
             param1 = 1;
         }
+        break;
     case CalibrationAPMAccelSimple:
         param5 = 4;
         break;
@@ -3817,6 +3819,14 @@ QString Vehicle::vehicleImageCompass() const
         return _firmwarePlugin->vehicleImageCompass(this);
     else
         return QString();
+}
+
+QVariant Vehicle::mainStatusIndicatorExpandedItem()
+{
+    if(_firmwarePlugin) {
+        return _firmwarePlugin->mainStatusIndicatorExpandedItem(this);
+    }
+    return QVariant();
 }
 
 const QVariantList& Vehicle::toolIndicators()

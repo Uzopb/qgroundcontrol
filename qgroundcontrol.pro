@@ -20,8 +20,8 @@ exists($${OUT_PWD}/qgroundcontrol.pro) {
 message(Qt version $$[QT_VERSION])
 
 !contains(CONFIG, DISABLE_QT_VERSION_CHECK) {
-    !equals(QT_MAJOR_VERSION, 5) | !equals(QT_MINOR_VERSION, 15) {
-        error("Unsupported Qt version, 5.15 is required")
+    !equals(QT_MAJOR_VERSION, 6) | !equals(QT_MINOR_VERSION, 6) {
+        error("Unsupported Qt version, 6.6 is required. Found $$QT_MAJOR_VERSION.$$QT_MINOR_VERSION")
     }
 }
 
@@ -256,7 +256,8 @@ QT += \
     widgets \
     xml \
     texttospeech \
-    core-private
+    core-private \
+    core5compat
 
 # Multimedia only used if QVC is enabled
 !contains (DEFINES, QGC_DISABLE_UVC) {
@@ -681,10 +682,12 @@ HEADERS += \
     src/Settings/ADSBVehicleManagerSettings.h \
     src/Settings/AppSettings.h \
     src/Settings/AutoConnectSettings.h \
+    src/Settings/BatteryIndicatorSettings.h \
     src/Settings/BrandImageSettings.h \
     src/Settings/RemoteIDSettings.h \
     src/Settings/FirmwareUpgradeSettings.h \
     src/Settings/FlightMapSettings.h \
+    src/Settings/FlightModeSettings.h \
     src/Settings/FlyViewSettings.h \
     src/Settings/OfflineMapsSettings.h \
     src/Settings/PlanViewSettings.h \
@@ -939,10 +942,12 @@ SOURCES += \
     src/Settings/ADSBVehicleManagerSettings.cc \
     src/Settings/AppSettings.cc \
     src/Settings/AutoConnectSettings.cc \
+    src/Settings/BatteryIndicatorSettings.cc \
     src/Settings/BrandImageSettings.cc \
     src/Settings/RemoteIDSettings.cc \
     src/Settings/FirmwareUpgradeSettings.cc \
     src/Settings/FlightMapSettings.cc \
+    src/Settings/FlightModeSettings.cc \
     src/Settings/FlyViewSettings.cc \
     src/Settings/OfflineMapsSettings.cc \
     src/Settings/PlanViewSettings.cc \
@@ -1364,6 +1369,9 @@ HEADERS += \
 SOURCES += \
     src/VideoManager/SubtitleWriter.cc \
     src/VideoManager/VideoManager.cc
+
+# FIXME_QT6 - Video is disable until conversion is complete
+CONFIG += DISABLE_VIDEOSTREAMING
 
 contains (CONFIG, DISABLE_VIDEOSTREAMING) {
     message("Skipping support for video streaming (manual override from command line)")
