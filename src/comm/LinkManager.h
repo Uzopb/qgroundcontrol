@@ -73,7 +73,9 @@ public:
     Q_INVOKABLE void                createMavlinkForwardingSupportLink (void);
     Q_INVOKABLE void                connectToAirLinkServer             (const QString &login, const QString &pass);
     Q_INVOKABLE void                createConfigurationAirLink         (void);
-    Q_INVOKABLE void                sendLoginMsgToAirLink              (LinkInterface* link, const QString &login);
+    Q_INVOKABLE void                startPendingConntectiontoAirLink   (LinkInterface* link, const QString &login);
+    QStringList _pending;
+    Q_INVOKABLE void                stopPendingConntectiontoAirLink   (const QString &login);
 
     // Called to signal app shutdown. Disconnects all links while turning off auto-connect.
     Q_INVOKABLE void shutdown(void);
@@ -112,6 +114,7 @@ public:
     // This should only be used by Qml code
     Q_INVOKABLE void createConnectedLink(LinkConfiguration* config);
 
+    void sendLoginMsgToAirLink(LinkInterface* link, const QString &login);
     /// Returns pointer to the mavlink forwarding link, or nullptr if it does not exist
     SharedLinkInterfacePtr mavlinkForwardingLink();
 

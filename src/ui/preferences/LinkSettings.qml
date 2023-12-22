@@ -211,13 +211,14 @@ Rectangle {
             enabled:    _currentSelection && !_currentSelection.link
             onClicked:  {
                 QGroundControl.linkManager.createConnectedLink(_currentSelection)
-                QGroundControl.linkManager.sendLoginMsgToAirLink(_currentSelection.link, _currentSelection.name)
+                QGroundControl.linkManager.startPendingConntectiontoAirLink(_currentSelection.link, _currentSelection.name)
             }
         }
         QGCButton {
             text:       qsTr("Disconnect")
             enabled:    _currentSelection && _currentSelection.link
             onClicked:  {
+                QGroundControl.linkManager.stopPendingConntectiontoAirLink(_currentSelection.name)
                 _currentSelection.link.disconnect()
                 _currentSelection.linkChanged()
             }

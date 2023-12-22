@@ -874,6 +874,42 @@ void LinkManager::createConfigurationAirLink()
     _isCreatedConfig = true;
 }
 
+void LinkManager::startPendingConntectiontoAirLink(LinkInterface *link, const QString &login)
+{
+    QTimer *t = new QTimer;
+    _mutex.lock();
+    _pending.append(login);
+    _mutex.unlock();
+    connect(t, &QTimer::timeout, [this, link, login, t] {
+        t->setInterval(1000);
+        _mutex.lock();
+        bool goOn = _pending.contains(login);
+        _mutex.unlock();
+        if (goOn) {
+            qDebug() << "Connecting...";
+            sendLoginMsgToAirLink(link, login);
+            if (link->isConnected()) {
+                t->stop();
+                t->deleteLater();
+                stopPendingConntectiontoAirLink(login);
+            }
+        } else {
+            qDebug() << "Stopping...";
+            t->stop();
+            t->deleteLater();
+        }
+
+    });
+    t->start(0);
+}
+
+void LinkManager::stopPendingConntectiontoAirLink(const QString &login)
+{
+    qDebug() << "Removing " + login + " from pending list";
+    QMutexLocker lock(&_mutex);
+    _pending.removeAll(login);
+}
+
 void LinkManager::_removeConfiguration(LinkConfiguration* config)
 {
     _qmlConfigurations.removeOne(config);
@@ -1090,19 +1126,15 @@ void LinkManager::sendLoginMsgToAirLink(LinkInterface* link, const QString &logi
 
     mavlink_msg_airlink_auth_pack(0, 0, &mavmsg, auth.login, auth.password);
     uint16_t len = mavlink_msg_to_send_buffer(buffer, &mavmsg);
-
-    QTimer *repeatingConnection = new QTimer;
-    repeatingConnection->setInterval(1000);
-    connect(repeatingConnection, &QTimer::timeout, [link, login, pass, buffer, len, repeatingConnection]() {
-        link->writeBytesThreadSafe((const char *)buffer, len);
-
-        qDebug() << (link->isConnected() ? "Connected" : "Not connected");
-        qDebug() << login.toUtf8().constData();
-        qDebug() << pass.toUtf8().constData();
-        if (link->isConnected()) {
-            repeatingConnection->stop();
-            repeatingConnection->deleteLater();
-        }
-    });
-    repeatingConnection->start();
+    _mutex.lock();
+    bool stillPending = _pending.contains(login);
+    _mutex.unlock();
+    if (!stillPending) {
+        qDebug() << "Force exit from connection";
+        return;
+    }
+    link->writeBytesThreadSafe((const char *)buffer, len);
+    qDebug() << (link->isConnected() ? "Connected" : "Not connected");
+    qDebug() << login.toUtf8().constData();
+    qDebug() << pass.toUtf8().constData();
 }
