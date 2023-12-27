@@ -888,17 +888,29 @@ void LinkManager::startPendingConntectiontoAirLink(LinkInterface *link, const QS
         if (goOn) {
             qDebug() << "Connecting...";
             sendLoginMsgToAirLink(link, login);
-            if (link->isConnected()) {
-                t->stop();
-                t->deleteLater();
-                stopPendingConntectiontoAirLink(login);
-            }
         } else {
             qDebug() << "Stopping...";
             t->stop();
             t->deleteLater();
         }
 
+    });
+    auto conn = std::make_shared<QMetaObject::Connection>();
+    *conn = connect(_mavlinkProtocol, &MAVLinkProtocol::messageReceived, [this, link, login, conn] (LinkInterface* linkSrc, mavlink_message_t message) {
+        if (link != linkSrc || message.msgid != MAVLINK_MSG_ID_AIRLINK_AUTH_RESPONSE) {
+            return;
+        }
+        mavlink_airlink_auth_response_t responseMsg;
+        mavlink_msg_airlink_auth_response_decode(&message, &responseMsg);
+        int answer = responseMsg.resp_type;
+        if (answer != AIRLINK_AUTH_RESPONSE_TYPE::AIRLINK_AUTH_OK) {
+            return;
+        }
+        qDebug() << "Connected successfully";
+        // t->stop();
+        // t->deleteLater();
+        stopPendingConntectiontoAirLink(login);
+        QObject::disconnect(*conn);
     });
     t->start(0);
 }
